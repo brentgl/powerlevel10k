@@ -427,9 +427,17 @@ echo 'source /usr/local/opt/powerlevel10k/powerlevel10k.zsh-theme' >>! ~/.zshrc
 ### Arch Linux
 
 ```zsh
-yay -Sy --noconfirm zsh-theme-powerlevel10k-git
+yay -S --noconfirm zsh-theme-powerlevel10k-git
 echo 'source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme' >>! ~/.zshrc
 ```
+
+[zsh-theme-powerlevel10k-git](https://aur.archlinux.org/packages/zsh-theme-powerlevel10k-git/)
+referenced above is the official Powerlevel10k package.
+
+There is also [zsh-theme-powerlevel10k](
+  https://www.archlinux.org/packages/community/x86_64/zsh-theme-powerlevel10k/) community package.
+Historicaly, [it has been breaking often and for extended periods of time](
+  https://github.com/romkatv/powerlevel10k/pull/786). **Do not use it.**
 
 ## Configuration
 
@@ -613,7 +621,7 @@ The command to update Powerlevel10k depends on how it was installed.
 | [Zplugin](#zplugin)       | `zplugin update`                                            |
 | [Zinit](#zinit)           | `zinit update`                                              |
 | [Homebrew](#homebrew)     | `brew update && brew upgrade`                               |
-| [Arch Linux](#arch-linux) | `yay -Syu --noconfirm --needed zsh-theme-powerlevel10k-git` |
+| [Arch Linux](#arch-linux) | `yay -S --noconfirm zsh-theme-powerlevel10k-git`            |
 
 **IMPORTANT**: Restart Zsh after updating Powerlevel10k. [Do not use `source ~/.zshrc`](
   #weird-things-happen-after-typing-source-zshrc).
@@ -665,6 +673,29 @@ The command to update Powerlevel10k depends on how it was installed.
    | [Homebrew](#homebrew)     | `brew uninstall powerlevel10k; brew untap romkatv/powerlevel10k` |
    | [Arch Linux](#arch-linux) | `yay -R --noconfirm zsh-theme-powerlevel10k-git`                 |
 5. Restart Zsh. [Do not use `source ~/.zshrc`](#weird-things-happen-after-typing-source-zshrc).
+
+### How do I install Powerlevel10k on a machine without Internet access?
+
+1. Run this command on the machine without Internet access:
+   ```sh
+   uname -sm | tr '[A-Z]' '[a-z]'
+   ```
+2. Run these commands on a machine connected to the Internet after replacing the value of
+   `target_uname` with the output of the previous command:
+   ```sh
+   target_uname="replace this with the output of the previous command"
+   git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
+   GITSTATUS_CACHE_DIR="$HOME"/powerlevel10k/gitstatus/usrbin ~/powerlevel10k/gitstatus/install -f -s "${target_uname% *}" -m "${target_uname#* }"
+   ```
+3. Copy `~/powerlevel10k` from the machine connected to the Internet to the one without Internet
+   access.
+4. Append the following lines to the bottom of `~/.zshrc` on the machine without Internet access:
+   ```zsh
+   source ~/powerlevel10k/powerlevel10k.zsh-theme
+   unset ZSH_THEME
+   ```
+
+To update, remove `~/powerlevel10k` on both machines and repeat steps 1-3.
 
 ### Where can I ask for help and report bugs?
 
@@ -1729,6 +1760,7 @@ typeset -g POWERLEVEL9K_OS_ICON_CONTENT_EXPANSION='${P9K_CONTENT}'  # not bold
 - [FAQ](#faq)
   - [How do I update Powerlevel10k?](#how-do-i-update-powerlevel10k)
   - [How do I uninstall Powerlevel10k?](#how-do-i-uninstall-powerlevel10k)
+  - [How do I install Powerlevel10k on a machine without Internet access?](#how-do-i-install-powerlevel10k-on-a-machine-without-internet-access)
   - [Where can I ask for help and report bugs?](#where-can-i-ask-for-help-and-report-bugs)
   - [Which aspects of shell and terminal does Powerlevel10k affect?](#which-aspects-of-shell-and-terminal-does-powerlevel10k-affect)
   - [I'm using Powerlevel9k with Oh My Zsh. How do I migrate?](#im-using-powerlevel9k-with-oh-my-zsh-how-do-i-migrate)
